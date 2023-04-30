@@ -2,6 +2,7 @@ package me.dio.academia.digital.service.impl;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,9 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public Student get(Long id) {
-        return null;
+        Optional<Student> optionalStudent = repository.findById(id);
+
+        return optionalStudent.orElse(null);
     }
 
     @Override
@@ -51,12 +54,19 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public Student update(Long id, StudentUpdateForm formUpdate) {
-        return null;
+
+        Student updatedStudent = repository.getById(id);
+
+        updatedStudent.setName(formUpdate.getName());
+        updatedStudent.setNeighborhood(formUpdate.getNeighborhood());
+        updatedStudent.setBornDate(formUpdate.getBornDate());
+
+        return repository.save(updatedStudent);
     }
 
     @Override
     public void delete(Long id) {
-        
+        repository.deleteById(id);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package me.dio.academia.digital.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,9 @@ public class PhysicalAssessmentServiceImpl implements IPhysicalAssessmentService
 
     @Override
     public PhysicalAssessment get(Long id) {
-        return null;
+        Optional<PhysicalAssessment> assessment = physicalAssessmentRepository.findById(id);
+
+        return assessment.orElse(null);
     }
 
     @Override
@@ -53,7 +56,7 @@ public class PhysicalAssessmentServiceImpl implements IPhysicalAssessmentService
 
     @Override
     public void delete(Long id) {
-        
+        physicalAssessmentRepository.deleteById(id);
     }
     
 }
