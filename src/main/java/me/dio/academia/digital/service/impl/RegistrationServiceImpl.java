@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import me.dio.academia.digital.entity.Registration;
+import me.dio.academia.digital.entity.Student;
 import me.dio.academia.digital.entity.form.RegistrationForm;
 import me.dio.academia.digital.repository.RegistrationRepository;
+import me.dio.academia.digital.repository.StudentRepository;
 import me.dio.academia.digital.service.IResgistrationService;
 
 @Service
@@ -16,14 +18,24 @@ public class RegistrationServiceImpl implements IResgistrationService {
     @Autowired
     private RegistrationRepository repository;
 
+    @Autowired
+    private StudentRepository studentRepository;
+
     @Override
     public Registration create(RegistrationForm form) {
-        return null;
+        
+        Registration newRegistration = new Registration();
+        Student student = studentRepository.findById(form.getStudentId()).get();
+
+        newRegistration.setId(form.getStudentId());
+        newRegistration.setStudent(student);
+
+        return repository.save(newRegistration);
     }
 
     @Override
     public Registration get(Long id) {
-        return null;
+        return repository.findById(id).get();
     }
 
     @Override
@@ -40,7 +52,13 @@ public class RegistrationServiceImpl implements IResgistrationService {
 
     @Override
     public void delete(Long id) {
-        
+
+        Registration registration = repository.findById(id).get();
+
+        registration.setStudent(null);
+        repository.save(registration);
+
+        repository.deleteById(id);
     }
     
 }

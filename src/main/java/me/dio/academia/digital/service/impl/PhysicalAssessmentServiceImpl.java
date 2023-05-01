@@ -51,12 +51,25 @@ public class PhysicalAssessmentServiceImpl implements IPhysicalAssessmentService
 
     @Override
     public PhysicalAssessment update(Long id, PhysicalAssessmentUpdateForm formUpdate) {
-        return null;
+
+        PhysicalAssessment updatedAssessment = physicalAssessmentRepository.findById(id).get();
+
+        updatedAssessment.setWeight(formUpdate.getWeight());
+        updatedAssessment.setHigh(formUpdate.getHigh());
+
+        return physicalAssessmentRepository.save(updatedAssessment);
     }
 
     @Override
     public void delete(Long id) {
+
+        PhysicalAssessment assessment = physicalAssessmentRepository.findById(id).get();
+    
+        assessment.setStudent(null);
+        physicalAssessmentRepository.save(assessment);
+    
         physicalAssessmentRepository.deleteById(id);
+        
     }
     
 }
