@@ -1,10 +1,15 @@
 package me.dio.academia.digital.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,8 +36,15 @@ public class RegistrationController {
     }
     
     @GetMapping("matriculas/{id}")
-    public Registration getOne(@PathVariable("id") Long id){
-        return service.get(id);
+    public ResponseEntity<Registration> getOne(@PathVariable("id") Long id){
+        try{
+            Registration registration = service.get(id);
+            return ResponseEntity.ok(registration);
+        }
+        catch(NoSuchElementException e){
+            return ResponseEntity.notFound().build();
+        }
+        
     }
     
     @PostMapping("/matriculas")
@@ -41,7 +53,18 @@ public class RegistrationController {
     }
 
     @DeleteMapping("/matriculas/{id}")
-    public void deleteRegistration(@PathVariable("id") Long id){
-        service.delete(id);
+    public ResponseEntity<String> deleteRegistration(@PathVariable("id") Long id){
+        try{
+            service.delete(id);
+            return ResponseEntity.ok().build();
+        }
+        catch(EmptyResultDataAccessException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch(DataIntegrityViolationException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Violação de constraint: " + e.getMessage());
+        }
+        
     }
 }
