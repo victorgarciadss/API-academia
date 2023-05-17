@@ -1,7 +1,7 @@
 package me.dio.academia.digital.controller;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
@@ -39,15 +39,8 @@ public class StudentController {
     }
 
     @GetMapping("alunos/{id}")
-    public ResponseEntity<Student> getOne(@PathVariable("id") Long id){
-        try{
-            Student student = service.get(id);
-            return ResponseEntity.ok(student);
-        }
-        catch(NoSuchElementException e){
-            return ResponseEntity.notFound().build();
-        }
-        
+    public Student getOne(@PathVariable("id") Long id){
+        return service.get(id);
     }
 
     @PostMapping("/alunos")
@@ -56,15 +49,8 @@ public class StudentController {
     }
 
     @GetMapping("alunos/avaliacoes/{id}")
-    public ResponseEntity<List<PhysicalAssessment>> getAllPhysicalAssessmentById(@PathVariable Long id){
-        try{
-            List<PhysicalAssessment> physicalAssessments = service.getAllPhysicalAssessmentById(id);
-            return ResponseEntity.ok(physicalAssessments);
-        }
-        catch(NoSuchElementException e){
-            return ResponseEntity.notFound().build();
-        }
-        
+    public List<PhysicalAssessment> getAllPhysicalAssessmentById(@PathVariable Long id){ 
+        return service.getAllPhysicalAssessmentById(id); 
     }
 
     @PutMapping("/alunos/{id}")
